@@ -6,8 +6,8 @@ class TransactionView(ListAPIView):
     def get_queryset(self):
         qs = super().get_queryset()
 
-        date_start = self.request.data.get('date_start')
-        date_end = self.request.data.get('date_end')
+        date_start = self.request.query_params.get('date_start')
+        date_end = self.request.query_params.get('date_end')
 
         if date_start is None or date_end is None:
             return Response(status=400, data='Not provided date_1 or date_2 arg')
