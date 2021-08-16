@@ -1,16 +1,15 @@
 from django.db.models import Sum
-from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from transactionstorage.transaction.models import Transaction
 
 
-class TransactionView(ListAPIView):
-    def get_queryset(self):
-        qs = super().get_queryset()
-
-        date_start = self.request.query_params.get('date_start')
-        date_end = self.request.query_params.get('date_end')
-
+class TransactionView(APIView):
+    def get(self, request):
+        date_start = request.query_params.get('date_start')
+        date_end = request.query_params.get('date_end')
         if date_start is None or date_end is None:
-            return Response(status=400, data='Not provided date_1 or date_2 arg')
-
-        return qs.filter(datetime__gte=date_start, datetime__lte=date_end).aggregate(Sum('amount'))
+            return Response(data=[])
+        data = Transaction.objects.filter(datetime__gte=date_start, datetime__lte=date_end).aggregate(Sum('amount'))
+        return Response(data=data)
