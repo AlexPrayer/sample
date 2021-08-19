@@ -15,5 +15,5 @@ class Transaction(models.Model):
 
     class Meta:
         indexes = (
-            (models.Index(fields=['transaction_datetime', 'user_id', 'type'])),
+            (models.Index(fields=['transaction_datetime', 'user_id'])),
         )
