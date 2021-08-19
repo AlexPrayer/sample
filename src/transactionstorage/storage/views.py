@@ -4,14 +4,14 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from transactionstorage.storage.models import Transaction, TRANSACTION_TYPES
+from transactionstorage.storage.models import TRANSACTION_TYPES, Transaction
 
 
 class RequestSerializer(serializers.Serializer):
-    date_start = serializers.DateTimeField()
-    date_end = serializers.DateTimeField()
+    date_start = serializers.DateField()
+    date_end = serializers.DateField()
     user_id = serializers.IntegerField()
-    transaction_type = serializers.ChoiceField(zip(TRANSACTION_TYPES, TRANSACTION_TYPES))
+    transaction_type = serializers.ChoiceField(choices=TRANSACTION_TYPES)
 
 
 class ReponseSerializer(serializers.Serializer):
@@ -29,7 +29,10 @@ class TransactionView(APIView):
     queryset = Transaction.objects.all()
 
     def get(self, request):
-        request_serializer = RequestSerializer(request.query_params)
+        request_serializer = RequestSerializer(data=request.query_params)
+        if not request_serializer.is_valid():
+            raise ValidationError("Wrong query params")
+
         request_data = request_serializer.data
 
         result = self.queryset.filter(
