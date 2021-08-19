@@ -2,7 +2,7 @@ from django.db.models import Sum
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from transactionstorage.transaction.models import Transaction
+from transactionstorage.storage.models import Transaction
 
 
 class TransactionView(APIView):
