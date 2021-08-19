@@ -29,7 +29,7 @@ class TransactionView(APIView):
     queryset = Transaction.objects.all()
 
     def get(self, request):
-        request_serializer = RequestSerializer(data=request.query_params)
+        request_serializer = self.request_serializer_class(data=request.query_params)
         if not request_serializer.is_valid():
             raise ValidationError("Wrong query params")
 
